@@ -3,8 +3,9 @@ Soon, your team will start an engaging project involving a Raspbot. Before we de
 main project, we will develop line tracing code in the C programming language, which will be
 integral to our upcoming project. In the first part of this project, we will use an IR tracking
 sensor to trace a black line. You are free to use any C library that suits your needs.
+
 ● Goal
-  ○ Implementing a line tracing program with C. (not C++)
+- Implementing a line tracing program with C. (not C++)
 ● Prerequisites
   ○ Set up your Raspbot following the provided guidelines.
   ○ Install the WiringPi library on your Raspberry Pi. (While not mandatory, this library is highly recommended for its utility.)
