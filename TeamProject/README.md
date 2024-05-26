@@ -1,6 +1,5 @@
 # Project Overview
 ### ● Goal
-<br>
   ○ Take items to get score.
   <br>
   ○ Disturb the opponent to prevent getting scores.
@@ -10,7 +9,6 @@
   <br>
   
 ### ● How to take item?
-<br>
   ○ Items with random scores are randomly spawned to the intersections of the map.
   <br>
   ○ You can take an item by simply reaching an intersection.
@@ -20,7 +18,6 @@
   <br>
   
 ### ● How to sabotage the opponent?
-<br>
   ○ You can set a trap when you reach an intersection.
   <br>
   ○ A trap reduces the score when a player (Include you!!) reaches the intersection.
@@ -32,7 +29,6 @@
   <br>
   
 ### ● How can I control my robot?
-<br>
   ○ You will set the algorithm to achieve the goals.
   <br>
   ○ Your Raspbot automatically moves along with lines based on your algorithm.
