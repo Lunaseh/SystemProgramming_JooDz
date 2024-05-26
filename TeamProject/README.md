@@ -85,3 +85,17 @@
 ### • 0, if you don’t want to set a trap.
 ### • 1, if you want to set a trap.
 ### • See “server.h” in our git respiratory. It might be helpful.
+
+# Due & Grading
+### ● Important Note:
+    ○ Bring your team raspbot to the class on time at June 4, Tuesday.
+    ○ If you failed to recognize the QRcode, you cannot get items and scores.
+    ○ We uploaded server code on a public git repository. (https://github.com/CELL-DGIST/2024_SystemProgramming_Server.git).
+    ○ The code might be modified. So, you should update the git respiratory to keep the latest status by using “git pull”.
+    ○ Rankings will be made in a double elimination way and the ranking will be reflected in the grade.
+### ● Submission Requirements:
+    ○ GitHub Repository: Commit your source code until the deadline. The summited code will be used for grading.
+    ○ Report: Submit a report of no more than one page. Explain your team’s strategy.
+    ○ Peer Review: Each individual should do a mutual evaluation. Write the uploaded form and submit it individually. Please rename the file to “StudentID_Name”.
+### ● Deadline:
+    ○ Submit all required files via the Learning Management System (LMS) by June 3, Monday, at 11:59:59 PM.
