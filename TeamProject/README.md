@@ -57,11 +57,11 @@
   <br>
   
 # Server
-### • How to connect with a server?
+### ● How to connect with a server?
     ○ You can communicate with a server by using a socket.
     ○ A port number and address should be variable.
     ○ You can test your own raspbot code by connecting via local host (127.0.0.1).
-### • Server ⟹ You
+### ● Server ⟹ You
     ○ Server gives you whole map information whenever    
       ▪ A new item is spawned.
       ▪ The location of your opponent is changed.
@@ -69,15 +69,15 @@
       ▪ DGIST.players contain information about you and your opponent.
       ▪ DGIST.map contains information about whole intersections.
       ▪ You should unpack the structure to utilize the information.
-### • You ⟹ Server
+### ● You ⟹ Server
     ○ You must let the server know your location and your action whenever you reach an intersection.
     ○ You give the server a ClientAction structure.
       ▪ ClientAction.row is your x value of (x,y)
       ▪ ClientAction.col is your y value of (x,y)
       ▪ ClientAction.action
-### • 0, if you don’t want to set a trap.
-### • 1, if you want to set a trap.
-### • See “server.h” in our git respiratory. It might be helpful.
+### ● 0, if you don’t want to set a trap.
+### ● 1, if you want to set a trap.
+### ● See “server.h” in our git respiratory. It might be helpful.
 
 # Due & Grading
 ### ● Important Note:
