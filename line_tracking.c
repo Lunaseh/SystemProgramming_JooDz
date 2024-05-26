@@ -4,7 +4,7 @@
 #include <wiringPiI2C.h>
 #include <unistd.h>
 
-#define PIN_L1 2 
+#define PIN_L1 2
 #define PIN_L2 3
 #define PIN_R1 0
 #define PIN_R2 7
@@ -59,42 +59,56 @@ int tracking_function() {
     int R1 = digitalRead(PIN_R1);
     int R2 = digitalRead(PIN_R2);
 
-    if ((L1 == LOW || L2 == LOW) && R2 == LOW) {
-        car_run(70, -30);
-        delay(200);
-    }
-    else if (L1 == LOW && (R1 == LOW || R2 == LOW)) {
-        car_run(-30, 70);
-        delay(200);
-    }
-    else if (L1 == LOW) {
-        car_run(-70, 70);
-        delay(50);
-    }
-    else if (R2 == LOW) {
+    printf("Sensor Readings: L1=%d, L2=%d, R1=%d, R2=%d\n", L1, L2, R1, R2);
+    fflush(stdout); // 강제로 출력 버퍼 비우기
+
+    if (L1 == LOW && L2 == HIGH && R1 == HIGH && R2 == HIGH) {
+        printf("Turn right\n");
+        fflush(stdout);
         car_run(70, -70);
-        delay(50);
-    }
-    else if (L2 == LOW && R1 == HIGH) {
-        car_run(-60, 60);
-        delay(20);
-    }
-    else if (L2 == HIGH && R1 == LOW) {
-        car_run(60, -60);
-        delay(20);          
-    }
-    else if (L2 == LOW && R1 == LOW) {
+        delay(400); // 더 긴 지연 시간으로 설정
+    } else if (L1 == HIGH && L2 == LOW && R1 == HIGH && R2 == HIGH) {
+        printf("Slight left\n");
+        fflush(stdout);
+        car_run(70, -30);
+        delay(200); // 더 긴 지연 시간으로 설정
+    } else if (L1 == HIGH && L2 == HIGH && R1 == LOW && R2 == HIGH) {
+        printf("Slight right\n");
+        fflush(stdout);
+        car_run(-30, 70);
+        delay(200); // 더 긴 지연 시간으로 설정
+    } else if (L1 == HIGH && L2 == HIGH && R1 == HIGH && R2 == LOW) {
+        printf("Turn left\n");
+        fflush(stdout);
+        car_run(-70, 70);
+        delay(400); // 더 긴 지연 시간으로 설정
+    } else if (L1 == LOW && L2 == LOW && R1 == HIGH && R2 == HIGH) {
+        printf("Turn hard left\n");
+        fflush(stdout);
+        car_run(-70, 70);
+        delay(400); // 더 긴 지연 시간으로 설정
+    } else if (L1 == HIGH && L2 == LOW && R1 == LOW && R2 == HIGH) {
+        printf("Straight\n");
+        fflush(stdout);
         car_run(70, 70);
-    }
-
-    if (L1 == LOW && L2 == LOW && R1 == LOW && R2 == LOW){
+        delay(200); // 더 긴 지연 시간으로 설정
+    } else if (L1 == HIGH && L2 == HIGH && R1 == LOW && R2 == LOW) {
+        printf("Turn hard right\n");
+        fflush(stdout);
+        car_run(70, -70);
+        delay(400); // 더 긴 지연 시간으로 설정
+    } else if (L1 == LOW && L2 == LOW && R1 == LOW && R2 == LOW) {
+        printf("All sensors on line, stop\n");
+        fflush(stdout);
         return 1;
+    } else {
+        printf("No sensors on line, keep straight\n");
+        fflush(stdout);
+        car_run(70, 70);
+        delay(400); // 더 긴 지연 시간으로 설정
     }
+
     return 0;
-}
-
-int is_end_line(){
-
 }
 
 int main() {
@@ -102,20 +116,20 @@ int main() {
         printf("WiringPi Setup Failure\n");
         return 1;
     }
-    else printf("WiringPi Setup Sucessed");
+    else printf("WiringPi Setup Successed\n");
 
     fd = wiringPiI2CSetup(DEVICE_ADDR);
     if (fd == -1) {
         printf("I2C Setup Failure\n");
         return 1;
     }
-    else printf("I2C Setup Sucessed");
+    else printf("I2C Setup Successed\n");
 
     pinMode(PIN_L1, INPUT);
     pinMode(PIN_L2, INPUT);
     pinMode(PIN_R1, INPUT);
     pinMode(PIN_R2, INPUT);
-    
+   
     int ret = 0;
     while (ret == 0) {
         ret = tracking_function();
