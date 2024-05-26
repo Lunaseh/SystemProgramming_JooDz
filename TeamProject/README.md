@@ -2,25 +2,16 @@
 ### ● Goal
     ○ Take items to get score.
     ○ Disturb the opponent to prevent getting scores.
-    ○ Accumulate more scores than the opponent to win.
-  <br>
-  <br>
-  
+    ○ Accumulate more scores than the opponent to win. 
 ### ● How to take item?
     ○ Items with random scores are randomly spawned to the intersections of the map.
     ○ You can take an item by simply reaching an intersection.
-    ○ A server lets you know where items are located.
-  <br>
-  <br>
-  
+    ○ A server lets you know where items are located. 
 ### ● How to sabotage the opponent?
     ○ You can set a trap when you reach an intersection.
     ○ A trap reduces the score when a player (Include you!!) reaches the intersection.
     ○ A server lets you know which intersection has a trap.
     ○ A server lets you know where your opponent is located.
-  <br>
-  <br>
-  
 ### ● How can I control my robot?
     ○ You will set the algorithm to achieve the goals.
     ○ Your Raspbot automatically moves along with lines based on your algorithm.
@@ -63,6 +54,8 @@
     ○ Player 1 starts at (0,0) and Player 2 starts at (4,4).
     ○ Each player has 4 traps.
     ○ 10 items are placed on a map.
+  <br>
+  
 # Server
 ### • How to connect with a server?
     ○ You can communicate with a server by using a socket.
