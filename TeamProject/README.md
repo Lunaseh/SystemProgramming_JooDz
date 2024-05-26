@@ -1,5 +1,6 @@
 # Project Overview
 ● Goal
+<br>
   ○ Take items to get score.
   ○ Disturb the opponent to prevent getting scores.
   ○ Accumulate more scores than the opponent to win.
