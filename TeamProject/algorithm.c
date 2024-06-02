@@ -158,10 +158,12 @@ int main() {
     while (true) {
         DGIST dgist;//DGIST 구조를 받아왔다.
         Node served_map[MAP_ROW][MAP_COL];
-        string QR_data = ""; //QR 인식 데이터. 현재 위치.
+        int QR_data = 0; //QR 인식 데이터. 현재 위치.
         //두 플레이어의 데이터를 받아서 저장
+        int QR_data_a = QR_data / 10;
+        int QR_data_b = QR_data % 10;
         //두 플레이어가 다른 위치
-        if (dgist.player[0].row == QR_data[0] && dgist.player[0].col == QR_data[1]) {
+        if (dgist.player[0].row == QR_data[0] && dgist.player[0].col == QR_data_b) {
             player_you = dgist.player[1];
             player_me = dgist.player[0];
         }
@@ -267,4 +269,5 @@ int main() {
 
         //안전한 곳에서 주행 시작
         algorithm(served_map);
+    }
 }
