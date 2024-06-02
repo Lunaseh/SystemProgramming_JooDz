@@ -219,9 +219,7 @@ void safeDrive(int targetRow, int targetCol) {
 void algorithm(Node board[MAP_ROW][MAP_COL]) {
     int targetRow = -1, targetCol = -1;
     bool moveToItem = false;
-
-    // 먼저 한 칸 이내에 아이템이 있는 곳을 찾음
-    int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북
+    int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북 // 먼저 한 칸 이내에 아이템이 있는 곳을 찾음
     for (int i = 0; i < 4; i++) {
         int newRow = player_me.row + directions[i][0];
         int newCol = player_me.col + directions[i][1];
@@ -232,16 +230,12 @@ void algorithm(Node board[MAP_ROW][MAP_COL]) {
             break;
         }
     }
-
-    // 한 칸 이내에 아이템이 없으면 트랩이 없는 안전한 곳을 찾음
-    if (!moveToItem && !findSafeMove(&targetRow, &targetCol, board)) {
+    if (!moveToItem && !findSafeMove(&targetRow, &targetCol, board)) { // 한 칸 이내에 아이템이 없으면 트랩이 없는 안전한 곳을 찾음
         // 이동할 수 있는 모든 곳에 트랩이 있는 경우 정지
         next_action = -1;
         return;
     }
-
-    // 안전한 경로로 이동
-    safeDrive(targetRow, targetCol);
+    safeDrive(targetRow, targetCol);  // 안전한 경로로 이동
 }
 
 void decideNextMove(DGIST* dgist, ClientAction* action, int playerId) {
