@@ -5,8 +5,12 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <string>
 #include "server.h"
 #include "modified_linetracing.h"
+
+#define MAP_ROW 5
+#define MAP_COL 5
 
 int my_score = 0;
 int direction = 0;
@@ -17,8 +21,8 @@ client_info player_me;
 enum Action currentAction;
 
 void drive(int row, int col) {
-    int dir = [0, 0, 0, 0];
-    //동남서북으로 떨어진 거리를 계산
+    int dir[4] = {0, 0, 0, 0}; // 동남서북으로 떨어진 거리를 계산
+
     if (row - player_me.row >= 0) {
         dir[0] = row - player_me.row;
     }
@@ -26,23 +30,23 @@ void drive(int row, int col) {
         dir[2] = (row - player_me.row) * -1;
     }
 
-    if (row - player_me.row >= 0) {
+    if (col - player_me.col >= 0) {
         dir[3] = col - player_me.col;
     }
     else {
         dir[1] = (col - player_me.col) * -1;
     }
 
-    //현재 방향이 맞으면 계속 직진
-    for (int i = 0; i < dir.size(); i++) {
+    // 현재 방향이 맞으면 계속 직진
+    for (int i = 0; i < 4; i++) {
         if (dir[i] > 0 && direction == i) {
             next_action = 0;
             return;
         }
     }
 
-    //현재 방향과 목표에 따른 방향 전환
-    //남
+    // 현재 방향과 목표에 따른 방향 전환
+    // 남
     if (direction == 1) {
         if (dir[0] > 0) {
             next_action = -1;
@@ -55,7 +59,7 @@ void drive(int row, int col) {
         }
         return;
     }
-    //북
+    // 북
     else if (direction == 3) {
         if (dir[0] > 0) {
             next_action = 1;
@@ -68,7 +72,7 @@ void drive(int row, int col) {
         }
         return;
     }
-    //동
+    // 동
     else if (direction == 0) {
         if (dir[1] > 0) {
             next_action = 1;
@@ -81,7 +85,7 @@ void drive(int row, int col) {
         }
         return;
     }
-    //서
+    // 서
     else if (direction == 2) {
         if (dir[1] > 0) {
             next_action = -1;
@@ -102,19 +106,19 @@ bool isTrap(int row, int col, Item board[MAP_ROW][MAP_COL]) {
 }
 
 // 아이템 체크를 위한 함수
-bool hasItem(int row, int col, Item board[MAP_ROW][MAP_COL])) {
+bool hasItem(int row, int col, Item board[MAP_ROW][MAP_COL]) {
     return board[row][col].status == item;
 }
 
 // 현재 위치에서 한 칸 이내의 모든 가능한 이동 방향을 확인하여 안전한 경로를 찾음
-bool findSafeMove(int& targetRow, int& targetCol, Item board[MAP_ROW][MAP_COL]) {
+bool findSafeMove(int* targetRow, int* targetCol, Item board[MAP_ROW][MAP_COL]) {
     int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북
     for (int i = 0; i < 4; i++) {
         int newRow = player_me.row + directions[i][0];
         int newCol = player_me.col + directions[i][1];
         if (newRow >= 0 && newRow < 5 && newCol >= 0 && newCol < 5 && !isTrap(newRow, newCol, board)) {
-            targetRow = newRow;
-            targetCol = newCol;
+            *targetRow = newRow;
+            *targetCol = newCol;
             return true;
         }
     }
@@ -144,7 +148,7 @@ void algorithm(Item board[MAP_ROW][MAP_COL]) {
     }
 
     // 한 칸 이내에 아이템이 없으면 트랩이 없는 안전한 곳을 찾음
-    if (!moveToItem && !findSafeMove(targetRow, targetCol, board)) {
+    if (!moveToItem && !findSafeMove(&targetRow, &targetCol, board)) {
         // 이동할 수 있는 모든 곳에 트랩이 있는 경우 정지
         next_action = -1;
         return;
@@ -156,14 +160,14 @@ void algorithm(Item board[MAP_ROW][MAP_COL]) {
 
 int main() {
     while (true) {
-        DGIST dgist;//DGIST 구조를 받아왔다.
-        Node served_map[MAP_ROW][MAP_COL];
-        int QR_data = 0; //QR 인식 데이터. 현재 위치.
-        //두 플레이어의 데이터를 받아서 저장
+        DGIST dgist; // DGIST 구조를 받아왔다.
+        Item served_map[MAP_ROW][MAP_COL];
+        int QR_data = 0; // QR 인식 데이터. 현재 위치.
+        // 두 플레이어의 데이터를 받아서 저장
         int QR_data_a = QR_data / 10;
         int QR_data_b = QR_data % 10;
-        //두 플레이어가 다른 위치
-        if (dgist.player[0].row == QR_data[0] && dgist.player[0].col == QR_data_b) {
+        // 두 플레이어가 다른 위치
+        if (dgist.player[0].row == QR_data_a && dgist.player[0].col == QR_data_b) {
             player_you = dgist.player[1];
             player_me = dgist.player[0];
         }
@@ -180,18 +184,18 @@ int main() {
             start_location = 1;
         }
 
-        served_map = dgist.map;
+        memcpy(served_map, dgist.map, sizeof(served_map));
 
         if (start_location == 0) {
-            //계획대로 폭탄을 전부 놓음.
+            // 계획대로 폭탄을 전부 놓음.
             if (served_map[0][1].score == -8 && served_map[1][1].score == -8 && served_map[2][1].score == -8 && served_map[3][1].score == -8) {
                 break;
             }
-            //계획은 어긋낫지만 폭탄이 없음
+            // 계획은 어긋났지만 폭탄이 없음
             else if (player_me.bomb == 0) {
                 break;
             }
-            //폭탄 설치하러 가기
+            // 폭탄 설치하러 가기
             else {
                 if (served_map[0][1].score != -8) {
                     drive(0, 1);
@@ -216,15 +220,15 @@ int main() {
             }
         }
         else {
-            //계획대로 폭탄을 전부 놓음.
+            // 계획대로 폭탄을 전부 놓음.
             if (served_map[4][3].score == -8 && served_map[3][3].score == -8 && served_map[2][3].score == -8 && served_map[1][3].score == -8) {
                 break;
             }
-            //계획은 어긋낫지만 폭탄이 없음
+            // 계획은 어긋났지만 폭탄이 없음
             else if (player_me.bomb == 0) {
                 break;
             }
-            //폭탄 설치하러 가기
+            // 폭탄 설치하러 가기
             else {
                 if (served_map[3][3].score != -8) {
                     drive(3, 3);
@@ -249,13 +253,14 @@ int main() {
             }
         }
     }
-    while (true) {
-        DGIST dgist;//DGIST 구조를 받아왔다.
-        Node served_map[MAP_ROW][MAP_COL];
-        string QR_data = ""; //QR 인식 데이터. 현재 위치.
-        //두 플레이어의 데이터를 받아서 저장
 
-        //두 플레이어가 다른 위치
+    while (true) {
+        DGIST dgist; // DGIST 구조를 받아왔다.
+        Item served_map[MAP_ROW][MAP_COL];
+        std::string QR_data = ""; // QR 인식 데이터. 현재 위치.
+        // 두 플레이어의 데이터를 받아서 저장
+
+        // 두 플레이어가 다른 위치
         if (dgist.player[0].row == QR_data[0] && dgist.player[0].col == QR_data[1]) {
             player_you = dgist.player[1];
             player_me = dgist.player[0];
@@ -265,9 +270,9 @@ int main() {
             player_me = dgist.player[1];
         }
 
-        served_map = dgist.map;
+        memcpy(served_map, dgist.map, sizeof(served_map));
 
-        //안전한 곳에서 주행 시작
+        // 안전한 곳에서 주행 시작
         algorithm(served_map);
     }
 }
