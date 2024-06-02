@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include "../server.h"
+#include "server.h"
 #include "modified_linetracing.h"
 
 int my_score = 0;
