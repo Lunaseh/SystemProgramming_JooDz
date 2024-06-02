@@ -107,7 +107,7 @@ void error_handling(const char* message) {
 }
 
 void drive(int row, int col) {
-    int dir[4] = {0, 0, 0, 0};
+    int dir[4] = { 0, 0, 0, 0 };
     // 동남서북으로 떨어진 거리를 계산
     if (row - player_me.row >= 0) {
         dir[0] = row - player_me.row;
@@ -219,7 +219,9 @@ void safeDrive(int targetRow, int targetCol) {
 void algorithm(Node board[MAP_ROW][MAP_COL]) {
     int targetRow = -1, targetCol = -1;
     bool moveToItem = false;
-    int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북 // 먼저 한 칸 이내에 아이템이 있는 곳을 찾음
+
+    // 먼저 한 칸 이내에 아이템이 있는 곳을 찾음
+    int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북
     for (int i = 0; i < 4; i++) {
         int newRow = player_me.row + directions[i][0];
         int newCol = player_me.col + directions[i][1];
@@ -230,12 +232,16 @@ void algorithm(Node board[MAP_ROW][MAP_COL]) {
             break;
         }
     }
-    if (!moveToItem && !findSafeMove(&targetRow, &targetCol, board)) { // 한 칸 이내에 아이템이 없으면 트랩이 없는 안전한 곳을 찾음
+
+    // 한 칸 이내에 아이템이 없으면 트랩이 없는 안전한 곳을 찾음
+    if (!moveToItem && !findSafeMove(&targetRow, &targetCol, board)) {
         // 이동할 수 있는 모든 곳에 트랩이 있는 경우 정지
         next_action = -1;
         return;
     }
-    safeDrive(targetRow, targetCol);  // 안전한 경로로 이동
+
+    // 안전한 경로로 이동
+    safeDrive(targetRow, targetCol);
 }
 
 void decideNextMove(DGIST* dgist, ClientAction* action, int playerId) {
@@ -334,7 +340,8 @@ int main(int argc, char* argv[]) {
         // 폭탄 설치 알고리즘 (여기에 실제 조건을 추가해야 합니다)
         if (/* 특정 조건 */ 0) {
             action.action = setBomb;
-        } else {
+        }
+        else {
             action.action = move;
         }
 
@@ -353,7 +360,8 @@ int main(int argc, char* argv[]) {
         if (dgist.players[0].row == row && dgist.players[0].col == col) {
             player_you = dgist.players[1];
             player_me = dgist.players[0];
-        } else {
+        }
+        else {
             player_you = dgist.players[0];
             player_me = dgist.players[1];
         }
@@ -361,7 +369,8 @@ int main(int argc, char* argv[]) {
         // 우리가 (0,0)에서 시작하는 경우
         if (player_me.col == 0 && player_me.row == 0) {
             start_location = 0;
-        } else {
+        }
+        else {
             start_location = 1;
         }
 
@@ -380,21 +389,25 @@ int main(int argc, char* argv[]) {
                     drive(0, 1);
                     currentAction = setBomb;
                     player_me.bomb--;
-                } else if (dgist.map[1][1].item.score != -8) {
+                }
+                else if (dgist.map[1][1].item.score != -8) {
                     drive(1, 1);
                     currentAction = setBomb;
                     player_me.bomb--;
-                } else if (dgist.map[2][1].item.score != -8) {
+                }
+                else if (dgist.map[2][1].item.score != -8) {
                     drive(2, 1);
                     currentAction = setBomb;
                     player_me.bomb--;
-                } else if (dgist.map[3][1].item.score != -8) {
+                }
+                else if (dgist.map[3][1].item.score != -8) {
                     drive(3, 1);
                     currentAction = setBomb;
                     player_me.bomb--;
                 }
             }
-        } else {
+        }
+        else {
             // 계획대로 폭탄을 전부 놓음
             if (dgist.map[4][3].item.score == -8 && dgist.map[3][3].item.score == -8 && dgist.map[2][3].item.score == -8 && dgist.map[1][3].item.score == -8) {
                 break;
@@ -409,15 +422,18 @@ int main(int argc, char* argv[]) {
                     drive(3, 3);
                     currentAction = setBomb;
                     player_me.bomb--;
-                } else if (dgist.map[2][3].item.score != -8) {
+                }
+                else if (dgist.map[2][3].item.score != -8) {
                     drive(2, 3);
                     currentAction = setBomb;
                     player_me.bomb--;
-                } else if (dgist.map[1][3].item.score != -8) {
+                }
+                else if (dgist.map[1][3].item.score != -8) {
                     drive(1, 3);
                     currentAction = setBomb;
                     player_me.bomb--;
-                } else if (dgist.map[0][3].item.score != -8) {
+                }
+                else if (dgist.map[0][3].item.score != -8) {
                     drive(0, 3);
                     currentAction = setBomb;
                     player_me.bomb--;
