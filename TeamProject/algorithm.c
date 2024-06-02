@@ -101,17 +101,17 @@ void drive(int row, int col) {
 }
 
 // 함정 체크를 위한 함수
-bool isTrap(int row, int col, Item board[MAP_ROW][MAP_COL]) {
+bool isTrap(int row, int col, Node board[MAP_ROW][MAP_COL]) {
     return board[row][col].status == trap;
 }
 
 // 아이템 체크를 위한 함수
-bool hasItem(int row, int col, Item board[MAP_ROW][MAP_COL]) {
+bool hasItem(int row, int col, Node board[MAP_ROW][MAP_COL]) {
     return board[row][col].status == item;
 }
 
 // 현재 위치에서 한 칸 이내의 모든 가능한 이동 방향을 확인하여 안전한 경로를 찾음
-bool findSafeMove(int* targetRow, int* targetCol, Item board[MAP_ROW][MAP_COL]) {
+bool findSafeMove(int* targetRow, int* targetCol, Node board[MAP_ROW][MAP_COL]) {
     int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북
     for (int i = 0; i < 4; i++) {
         int newRow = player_me.row + directions[i][0];
@@ -126,7 +126,7 @@ bool findSafeMove(int* targetRow, int* targetCol, Item board[MAP_ROW][MAP_COL]) 
 }
 
 // 안전한 경로로 이동
-void safeDrive(int targetRow, int targetCol, Item board[MAP_ROW][MAP_COL]) {
+void safeDrive(int targetRow, int targetCol, Node board[MAP_ROW][MAP_COL]) {
     drive(targetRow, targetCol);
 }
 
