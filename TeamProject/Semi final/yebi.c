@@ -10,7 +10,6 @@
 #include <stdbool.h>
 #include "server.h"
 #include "modified_linetracing.h"
-#include <windows.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -109,9 +108,9 @@ void error_handling(const char* message) {
     perror(message);
     exit(1);
 }
-/*
+
 void drive(int row, int col) {
-    int dir[4] = {0, 0, 0, 0};
+    int dir[4] = { 0, 0, 0, 0 };
     // 동남서북으로 떨어진 거리를 계산
     if (row - player_me.row >= 0) {
         dir[0] = row - player_me.row;
@@ -223,7 +222,9 @@ void safeDrive(int targetRow, int targetCol) {
 void algorithm(Node board[MAP_ROW][MAP_COL]) {
     int targetRow = -1, targetCol = -1;
     bool moveToItem = false;
-    int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북 // 먼저 한 칸 이내에 아이템이 있는 곳을 찾음
+
+    // 먼저 한 칸 이내에 아이템이 있는 곳을 찾음
+    int directions[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} }; // 동, 남, 서, 북
     for (int i = 0; i < 4; i++) {
         int newRow = player_me.row + directions[i][0];
         int newCol = player_me.col + directions[i][1];
@@ -234,12 +235,16 @@ void algorithm(Node board[MAP_ROW][MAP_COL]) {
             break;
         }
     }
-    if (!moveToItem && !findSafeMove(&targetRow, &targetCol, board)) { // 한 칸 이내에 아이템이 없으면 트랩이 없는 안전한 곳을 찾음
+
+    // 한 칸 이내에 아이템이 없으면 트랩이 없는 안전한 곳을 찾음
+    if (!moveToItem && !findSafeMove(&targetRow, &targetCol, board)) {
         // 이동할 수 있는 모든 곳에 트랩이 있는 경우 정지
         next_action = -1;
         return;
     }
-    safeDrive(targetRow, targetCol);  // 안전한 경로로 이동
+
+    // 안전한 경로로 이동
+    safeDrive(targetRow, targetCol);
 }
 
 void decideNextMove(DGIST* dgist, ClientAction* action, int playerId) {
@@ -277,7 +282,7 @@ void decideNextMove(DGIST* dgist, ClientAction* action, int playerId) {
 
         action->action = move;
     }
-}*/
+}
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
@@ -325,47 +330,60 @@ int main(int argc, char* argv[]) {
     pinMode(PIN_L2, INPUT);
     pinMode(PIN_R1, INPUT);
     pinMode(PIN_R2, INPUT);
-
     int ret = 0;
     while (ret == 0) {
         ret = tracking_function();
-        sleep(100);  // 루프의 지연 시간을 늘림
+        delay(100);  // 루프의 지연 시간을 늘림
     }
-
 
     int row, col;
     ClientAction action;
     DGIST dgist;
-
-    printf("5\n");
-    if (send(sock, &action, sizeof(ClientAction), 0) < 0) {
-        error_handling("send");
-    }
-    printf("6\n");
-    if (recv(sock, &dgist, sizeof(DGIST), 0) < 0) {
-        error_handling("recv");
-    }
-    printf("7\n");
-
-        // 두 플레이어의 데이터를 받아서 저장
-        //if (dgist.players[0].row == row && dgist.players[0].col == col) {
-    player_you = dgist.players[1];
-    player_me = dgist.players[0];
-        //} 
+    printf("3\n");
+    while (1) {
+        detect_qr_code(&row, &col);
+        action.row = row;
+        action.col = col;
+        printf("4\n");
+        // 폭탄 설치 알고리즘 (여기에 실제 조건을 추가해야 합니다)
+        //if (/* 특정 조건 */ 0) {
+        //    action.action = setBomb;
+        //}
         //else {
-        //    player_you = dgist.players[0];
-        //    player_me = dgist.players[1];
+        //    action.action = move;
         //}
-        
 
+        printf("5\n");
+        if (send(sock, &action, sizeof(ClientAction), 0) < 0) {
+            error_handling("send");
+        }
+        printf("6\n");
+
+        //if (recv(sock, &dgist, sizeof(DGIST), 0) < 0) {
+            //error_handling("recv");
         //}
-    printf("8\n");
-    if (tracking_function() == 1) {
-        car_stop();
-        break;
+        printf("7\n");
+
+
+        player_you = dgist.players[0];
+        player_me = dgist.players[1];
+
+
+
+
+
+        //algorithm(dgist.map);
+        //decideNextMove(&dgist, &action, 0);
+
+        if (send(sock, &action, sizeof(ClientAction), 0) < 0) {
+            error_handling("send");
+        }
+        printf("8\n");
+        if (tracking_function() == 1) {
+            car_stop();
+        }
     }
     printf("9\n");
     close(sock);
     return 0;
 }
-
